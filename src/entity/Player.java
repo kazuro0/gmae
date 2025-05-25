@@ -45,6 +45,9 @@ public class Player extends Entity{
     }
 
     public void update() {
+        if (keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed) {
+            spriteCounter++;
+        }
         if (keyH.upPressed) {
             direction = "up";
             y -= speed;
@@ -61,16 +64,53 @@ public class Player extends Entity{
             direction = "right";
             x += speed;
         }
+
+        if (spriteCounter > 15) {
+            if (spriteNum == 1){
+                spriteNum = 2;
+            } else if (spriteNum == 2) {
+                spriteNum = 1;
+            }
+            spriteCounter = 0;
+        }
     }
 
     public void draw(Graphics2D g2) {
-        BufferedImage image = switch (direction) {
-            case "up" -> up1;
-            case "down" -> down1;
-            case "left" -> left1;
-            case "right" -> right1;
-            default -> null;
-        };
+        BufferedImage image = null;
+        switch (direction) {
+            case "up" -> {
+                if (spriteNum == 1) {
+                    image = up1;
+                }
+                if (spriteNum == 2) {
+                    image = up2;
+                }
+            }
+            case "down" -> {
+                if (spriteNum == 1) {
+                    image = down1;
+                }
+                if (spriteNum == 2) {
+                    image = down2;
+                }
+            }
+            case "left" -> {
+                if (spriteNum == 1) {
+                    image = left1;
+                }
+                if (spriteNum == 2) {
+                    image = left2;
+                }
+            }
+            case "right" -> {
+                if (spriteNum == 1) {
+                    image = right1;
+                }
+                if (spriteNum == 2) {
+                    image = right2;
+                }
+            }
+        }
         g2.drawImage(image, x, y, gp.tileSize, gp.tileSize, null);
 
     }
