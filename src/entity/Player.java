@@ -14,17 +14,23 @@ public class Player extends Entity{
     GamePanel gp;
     KeyHandler keyH;
 
+    public final int screenX;
+    public final int screenY;
+
     public Player(GamePanel gp, KeyHandler keyH) {
         this.gp = gp;
         this.keyH = keyH;
+
+        screenX = gp.screenWidth/2 - gp.tileSize/2;
+        screenY = gp.screenHeight/2 - gp.tileSize/2;
 
         setDefaultValues();
         getPlayerImage();
     }
 
     public void setDefaultValues() {
-        x = 100;
-        y = 100;
+        worldX = gp.tileSize * 23;
+        worldY = gp.tileSize * 21;
         speed = 4;
         direction = "down";
     }
@@ -50,19 +56,19 @@ public class Player extends Entity{
         }
         if (keyH.upPressed) {
             direction = "up";
-            y -= speed;
+            worldY -= speed;
         }
         else if (keyH.downPressed) {
             direction = "down";
-            y += speed;
+            worldY += speed;
         }
         if (keyH.leftPressed) {
             direction = "left";
-            x -= speed;
+            worldX -= speed;
         }
         else if (keyH.rightPressed) {
             direction = "right";
-            x += speed;
+            worldX += speed;
         }
 
         if (spriteCounter > 15) {
@@ -76,42 +82,42 @@ public class Player extends Entity{
     }
 
     public void draw(Graphics2D g2) {
-        BufferedImage image = null;
+        BufferedImage playerImage = null;
         switch (direction) {
             case "up" -> {
                 if (spriteNum == 1) {
-                    image = up1;
+                    playerImage = up1;
                 }
                 if (spriteNum == 2) {
-                    image = up2;
+                    playerImage = up2;
                 }
             }
             case "down" -> {
                 if (spriteNum == 1) {
-                    image = down1;
+                    playerImage = down1;
                 }
                 if (spriteNum == 2) {
-                    image = down2;
+                    playerImage = down2;
                 }
             }
             case "left" -> {
                 if (spriteNum == 1) {
-                    image = left1;
+                    playerImage = left1;
                 }
                 if (spriteNum == 2) {
-                    image = left2;
+                    playerImage = left2;
                 }
             }
             case "right" -> {
                 if (spriteNum == 1) {
-                    image = right1;
+                    playerImage = right1;
                 }
                 if (spriteNum == 2) {
-                    image = right2;
+                    playerImage = right2;
                 }
             }
         }
-        g2.drawImage(image, x, y, gp.tileSize, gp.tileSize, null);
+        g2.drawImage(playerImage, screenX, screenY, gp.tileSize, gp.tileSize, null);
 
     }
 
