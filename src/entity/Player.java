@@ -17,6 +17,8 @@ public class Player extends Entity{
     public final int screenX;
     public final int screenY;
 
+    public boolean moving = false;
+
     public Player(GamePanel gp, KeyHandler keyH) {
         this.gp = gp;
         this.keyH = keyH;
@@ -24,7 +26,7 @@ public class Player extends Entity{
         screenX = gp.screenWidth/2 - gp.tileSize/2;
         screenY = gp.screenHeight/2 - gp.tileSize/2;
 
-        collisionArea = new Rectangle(13, 26, 22, 22);
+        collisionArea = new Rectangle(14, 26, 18, 15);
 
         setDefaultValues();
         getPlayerImage();
@@ -53,43 +55,61 @@ public class Player extends Entity{
     }
 
     public void update() {
-        if (keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed) {
-            spriteCounter++;
-            if (keyH.upPressed) {
-                direction = "up";
-            }
-            if (keyH.downPressed) {
-                direction = "down";
-            }
-            if (keyH.leftPressed) {
-                direction = "left";
-            }
-            if (keyH.rightPressed) {
-                direction = "right";
-            }
+        int tempWorldX = worldX;
+        int tempWorldY = worldY;
 
-            collisionOn = false;
+        if (keyH.upPressed) {
+            direction = "up";
+            worldY -= speed;
+
+            collisionY = false;
             gp.collisionChecker.checkTile(this);
-
-            if (!collisionOn) {
-                switch (direction) {
-                    case "up" -> worldY -= speed;
-                    case "down" -> worldY += speed;
-                    case "left" -> worldX -= speed;
-                    case "right" -> worldX += speed;
-                }
-            }
-
-            if (spriteCounter > 15) {
-                if (spriteNum == 1){
-                    spriteNum = 2;
-                } else if (spriteNum == 2) {
-                    spriteNum = 1;
-                }
-                spriteCounter = 0;
+            if (collisionY) {
+                worldY = tempWorldY;
             }
         }
 
+        if (keyH.downPressed) {
+            direction = "down";
+            worldY += speed;
+
+            collisionY = false;
+            gp.collisionChecker.checkTile(this);
+            if (collisionY) {
+                worldY = tempWorldY;
+            }
+        }
+
+        if (keyH.leftPressed) {
+            direction = "left";
+            worldX -= speed;
+
+            collisionX = false;
+            gp.collisionChecker.checkTile(this);
+            if (collisionX) {
+                worldX = tempWorldX;
+            }
+        }
+
+        if (keyH.rightPressed) {
+            direction = "right";
+            worldX += speed;
+
+            collisionX = false;
+            gp.collisionChecker.checkTile(this);
+            if (collisionX) {
+                worldX = tempWorldX;
+            }
+        }
+
+        if (keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed) {
+            spriteCounter++;
+            if (spriteCounter > 15) {
+                if (spriteNum == 1) spriteNum = 2;
+                else spriteNum = 1;
+                spriteCounter = 0;
+            }
+        }
     }
 
     public void draw(Graphics2D g2) {
@@ -129,6 +149,23 @@ public class Player extends Entity{
             }
         }
         g2.drawImage(playerImage, screenX, screenY, gp.tileSize, gp.tileSize, null);
+
+//        Color oldColor = g2.getColor();
+//        g2.setColor(new Color(255, 0, 0, 100)); // красный с прозрачностью
+//        g2.fillRect(
+//                screenX + collisionArea.x,
+//                screenY + collisionArea.y,
+//                collisionArea.width,
+//                collisionArea.height
+//        );
+//        g2.setColor(Color.RED);
+//        g2.drawRect(
+//                screenX + collisionArea.x,
+//                screenY + collisionArea.y,
+//                collisionArea.width,
+//                collisionArea.height
+//        );
+//        g2.setColor(oldColor);
 
     }
 
